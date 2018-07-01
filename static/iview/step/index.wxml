@@ -1,6 +1,6 @@
 <view class="i-class i-step-item {{parse.getClass(status,current,index)}} {{ direction === 'vertical' ? 'i-step-vertical' : 'i-step-horizontal' }}" style="{{parse.getItemStyle(len,direction)}}">
     <view class="i-step-item-ico">
-        <view class="i-step-ico" wx:if="{{parse.noIco(status,current,index,icon)  }}">{{ index+1 }}</view>
+        <view class="i-step-ico" wx:if="{{parse.noIco(status,current,index,icon)  }}"></view>
         <view class="i-step-ico" wx:else>
             <i-icon i-class="i-step-ico-in" type="{{parse.getIcoClass(status,icon)}}"></i-icon>
         </view>
@@ -21,7 +21,7 @@
         </view>
     </view>
 </view>
-<wxs module="parse"> 
+<wxs module="parse">
 var allStatus = ['wait','process','finish','error'];
 module.exports = {
     noIco : function( status,current,index,icon ){

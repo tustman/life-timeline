@@ -23,8 +23,10 @@ export default {
       'i-panel': '../../static/iview/panel/index',
       'i-toast': '../../static/iview/toast/index',
       'i-switch': '../../static/iview/switch/index',
-      'i-icon': '../../static/iview/icon/index'
+      'i-icon': '../../static/iview/icon/index',
+      'i-steps': '../../static/iview/steps/index',
+      'i-step': '../../static/iview/step/index'
     },
-    navigationBarTitleText: '王小宁的家'
+    navigationBarTitleText: '时间线'
   }
 }
