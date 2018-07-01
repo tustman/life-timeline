@@ -10,7 +10,7 @@
 	"miniprogramRoot": "./dist/",
 	"compileType": "miniprogram",
 	"appid": "wx1f3650068c2eab69",
-	"projectname": "smart-home",
+	"projectname": "life-timeline",
 	"condition": {
 		"search": {
 			"current": -1,
@@ -29,7 +29,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": -1,
+			"current": 0,
 			"list": [
 				{
 					"id": -1,

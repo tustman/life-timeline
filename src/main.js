@@ -13,8 +13,6 @@ export default {
     // 页面前带有 ^ 符号的，会被编译成首页，其他页面可以选填，我们会自动把 webpack entry 里面的入口页面加进去
     pages: [
       '^pages/index/main',
-      'pages/shop/main',
-      'pages/scene/main',
       'pages/my/main',
       'pages/my/person/main',
       'pages/my/voice/main'
@@ -34,17 +32,7 @@ export default {
         pagePath: 'pages/index/main',
         iconPath: '/static/image/std_tab_icon_my_device_normal.png',
         selectedIconPath: '/static/image/std_tab_icon_my_device_selected.png',
-        text: '米家'
-      }, {
-        pagePath: 'pages/shop/main',
-        iconPath: '/static/image/std_tab_icon_shop_normal.png',
-        selectedIconPath: '/static/image/std_tab_icon_shop_selected.png',
-        text: '有品'
-      }, {
-        pagePath: 'pages/scene/main',
-        iconPath: '/static/image/std_tab_icon_scene_normal.png',
-        selectedIconPath: '/static/image/std_tab_icon_scene_selected.png',
-        text: '智能'
+        text: '时间线'
       }, {
         pagePath: 'pages/my/main',
         iconPath: '/static/image/std_tab_icon_my_centernormal.png',

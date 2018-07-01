@@ -1,120 +1,96 @@
 <template>
   <div class="my-container">
-    <i-panel @click="handlerAvatarClick">
-      <div class="title-panel">
-        <div>
-          <i-avatar class="my-avatar" src="../../../static/image/avatar.jpg" size="large"></i-avatar>
-        </div>
-        <div class="my-title-info">
-          <span class="address">王小宁</span>
-          <span class="weather_info_text">8个智能设备</span>
-        </div>
-        <div class="my-title-info-more">
-          >
-        </div>
-      </div>
+    <view @click="handlerAvatarClick" class="head-panel">
+      <i-avatar class="my-avatar" src="../../../static/image/avatar.jpg" size="large"></i-avatar>
+      <div class="nickname">王一宁</div>
+      <div class="intro">简介: 软件开发,爱看书,爱思考</div>
+    </view>
+
+    <i-panel class="cell-panel-demo">
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">性别</view>
+        </view>
+
+        <view class="weui-cell__bd">
+          <picker @change="bindSexPickerChange" :value="index" :range="array">
+            <view class="weui-input">{{array[selectSex]}}</view>
+          </picker>
+        </view>
+      </view>
+
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">生日</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker mode="date" @change="bindBirthDateChange" :value="birthDate" start="2015-09-01" end="2017-09-01">
+            <view class="weui-input">{{birthDate}}</view>
+          </picker>
+        </view>
+      </view>
+
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">家乡</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker @change="bindHomePickerChange" :value="selectProvince" :range="province">
+            <view class="weui-input">{{province[selectHomeProvince]}}</view>
+          </picker>
+        </view>
+      </view>
+
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">所在地</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker @change="bindAddressPickerChange" :value="selectProvince" :range="province">
+            <view class="weui-input">{{province[selectAddressProvince]}}</view>
+          </picker>
+        </view>
+      </view>
     </i-panel>
 
     <i-panel class="cell-panel-demo">
-      <i-cell>
-        <i-grid>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">当前版本</view>
+        </view>
+        <view class="weui-cell__bd">
+          <view class="weui-input">1.2.3</view>
+        </view>
+      </view>
 
-          <i-grid-item @click="handleToast">
-            <i-grid-icon>
-              <image class="grid-image" src="/static/image/std_person_center_icon_scene.png"/>
-            </i-grid-icon>
-            <i-grid-label><span class="grid-text">品味</span></i-grid-label>
-          </i-grid-item>
-
-          <i-grid-item @click="handleToast">
-
-            <i-grid-icon>
-              <image class="grid-image" src="/static/image/std_person_center_icon_share_device.png"/>
-            </i-grid-icon>
-            <i-grid-label class="grid-text"><span class="grid-text">设备共享</span></i-grid-label>
-
-          </i-grid-item>
-
-          <i-grid-item @click="handleToast">
-
-            <i-grid-icon>
-              <image class="grid-image" src="/static/image/std_person_center_icon_family.png"/>
-            </i-grid-icon>
-            <i-grid-label class="grid-text"><span class="grid-text">我的家人</span></i-grid-label>
-
-          </i-grid-item>
-
-
-          <i-grid-item @click="handleToast" >
-
-            <i-grid-icon>
-              <image class="grid-image" src="/static/image/std_person_center_icon_experience.png"/>
-            </i-grid-icon>
-            <i-grid-label class="grid-text"><span class="grid-text">虚拟体验</span></i-grid-label>
-
-          </i-grid-item>
-        </i-grid>
-        <i-grid>
-          <i-grid-item @click="handleToast">
-
-            <i-grid-icon>
-              <image class="grid-image" src="/static/image/std_person_center_icon_ble_gateway.png"/>
-            </i-grid-icon>
-            <i-grid-label class="grid-text"><span class="grid-text">蓝牙网关</span></i-grid-label>
-
-          </i-grid-item>
-
-          <i-grid-item @click="handleToast">
-
-            <i-grid-icon>
-              <image class="grid-image" src="/static/image/personal_profile_icon_comsumptive.png"/>
-            </i-grid-icon>
-            <i-grid-label class="grid-text"><span class="grid-text">生活耗材</span></i-grid-label>
-
-          </i-grid-item>
-
-          <i-grid-item @click="handleToast">
-
-            <i-grid-icon>
-              <image class="grid-image" src="/static/image/std_person_center_icon_water.png"/>
-            </i-grid-icon>
-            <i-grid-label class="grid-text"><span class="grid-text">生活缴费</span></i-grid-label>
-
-          </i-grid-item>
-
-
-          <i-grid-item @click="handleVoice">
-
-            <i-grid-icon>
-              <image class="grid-image" src="/static/image/std_person_center_voice_icon.png"/>
-            </i-grid-icon>
-            <i-grid-label class="grid-text"><span class="grid-text">语音控制</span></i-grid-label>
-
-          </i-grid-item>
-        </i-grid>
-      </i-cell>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">关于我们</view>
+        </view>
+        <view class="weui-cell__bd">
+          <view class="weui-input"></view>
+        </view>
+      </view>
     </i-panel>
 
-    <i-panel class="cell-panel-demo">
-      <i-cell-group>
-        <i-cell title="我的微信小程序" @click="handleToast" is-link></i-cell>
-        <i-cell title="我的商城" @click="handleToast" is-link></i-cell>
-        <i-cell title="论坛" @click="handleToast" is-link></i-cell>
-        <i-cell title="帮助与反馈" @click="handleToast" is-link></i-cell>
-        <i-cell title="设置" @click="handleToast" is-link></i-cell>
-      </i-cell-group>
-    </i-panel>
     <i-message id="message" />
     <i-toast id="toast" />
+
   </div>
 </template>
 
 <script>
 import card from '@/components/card'
-const {$Message, $Toast} = require('../../../static/iview/base/index')
+const {$Message} = require('../../../static/iview/base/index')
 export default {
   data () {
     return {
+      array: ['男', '女'],
+      selectSex: 0,
+      birthDate: '2018-07-01',
+      province: ['北京', '天津', '河北', '山西', '内蒙古', '辽宁', '吉林', '黑龙江', '上海', '江苏', '浙江省', '安徽', '福建', '江西', '山东', '河南', '湖北', '湖南', '广东', '广西', '海南', '重庆', '四川', '贵州', '云南', '西藏', '陕西', '甘肃省', '青海', '宁夏', '新疆', '台湾', '香港特别行政区', '澳门'],
+      selectHomeProvince: 0,
+      selectAddressProvince: 0,
       buttonType: 'error',
       buttonValue: '关机',
       userInfo: {},
@@ -127,10 +103,17 @@ export default {
   },
 
   methods: {
-    handleToast () {
-      $Toast({
-        content: '该功能还未实现'
-      })
+    bindSexPickerChange (data) {
+      this.selectSex = data.mp.detail.value
+    },
+    bindHomePickerChange (data) {
+      this.selectHomeProvince = data.mp.detail.value
+    },
+    bindAddressPickerChange (data) {
+      this.selectAddressProvince = data.mp.detail.value
+    },
+    bindBirthDateChange (data) {
+      this.birthDate = data.mp.detail.value
     },
     handlerAvatarClick () {
       wx.navigateTo({
@@ -185,19 +168,30 @@ export default {
 </script>
 
 <style scoped>
+  @import "../../../static/css/weui.wxss";
+  .head-panel{
+    background-color: #3c3c3c;
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .nickname {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #F2F2F2;
+  }
+
+  .intro {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #F2F2F2;
+  }
   .cell-panel-demo{
     display: block;
     margin-top: 10px;
   }
-  .title-panel{
-    display: flex;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    padding-left: 25px;
-    justify-content: flex-start;
-  }
   .my-avatar{
-    margin-left: 20px;
     height: 100px;
     width: 100px;
   }

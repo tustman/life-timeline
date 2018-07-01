@@ -23,9 +23,9 @@ export default {
       'i-panel': '../../static/iview/panel/index',
       'i-toast': '../../static/iview/toast/index'
     },
+    backgroundTextStyle: 'light',
     navigationBarTitleText: '我的',
-    navigationBarBackgroundColor: '#FFF',
-    navigationBarTextStyle: 'black',
-    backgroundTextStyle: 'black'
+    navigationBarBackgroundColor: '#3c3c3c',
+    navigationBarTextStyle: '#3c3c3c'
   }
 }
