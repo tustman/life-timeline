@@ -1,0 +1,109 @@
+<template>
+  <div class="my-container">
+    <div>
+      <i-spin custom>
+        <i-icon type="refresh" size="30" i-class="icon-load"></i-icon>
+        <view>该页面正在开发中...</view>
+      </i-spin>
+    </div>
+  </div>
+</template>
+
+<script>
+import { formatTime } from '@/utils/index'
+import card from '@/components/card'
+
+export default {
+  components: {
+    card
+  },
+
+  data () {
+    return {
+      logs: []
+    }
+  },
+
+  created () {
+    const logs = (wx.getStorageSync('logs') || [])
+    this.logs = logs.map(log => formatTime(new Date(log)))
+  }
+}
+</script>
+
+<style>
+  .my-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #F2F2F2;
+  }
+  .item{
+    height: 100px;
+    text-align: center;
+  }
+  .container{
+    display: block;
+    width: 200px;
+    height: 100px;
+    margin: 0 auto;
+    position: relative;
+    border: 1px solid #eee;
+  }
+
+  @keyframes ani-demo-spin {
+    from { transform: rotate(0deg);}
+    50%  { transform: rotate(180deg);}
+    to   { transform: rotate(360deg);}
+  }
+  .icon-load{
+    animation: ani-demo-spin 1s linear infinite;
+  }
+
+  .loading{
+    display: inline-block;
+    margin-right: 12px;
+    vertical-align: middle;
+    width: 20px;
+    height: 20px;
+    background: transparent;
+    border-radius: 50%;
+    border: 2px solid #2d8cf0;
+    border-color: #2d8cf0 #2d8cf0 #2d8cf0 transparent;
+    animation: loading-spin 0.6s linear;
+    animation-iteration-count: infinite;
+  }
+
+  @keyframes loading-spin {
+    0% {
+      transform: rotate(0);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .spin-article{
+    width: 100%;
+    height: 200px;
+    padding: 10px;
+    position: relative;
+    border: 1px solid #eee;
+    text-align: center;
+    box-sizing: border-box;
+  }
+  .title{
+    font-size: 22px;
+  }
+  .name{
+    color: #999;
+    font-style: normal;
+    font-size: 14px;
+  }
+  .switch{
+    margin: 10px;
+  }
+</style>

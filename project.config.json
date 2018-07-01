@@ -1,0 +1,67 @@
+{
+	"description": "项目配置文件。",
+	"setting": {
+		"urlCheck": true,
+		"es6": true,
+		"postcss": true,
+		"minified": true,
+		"newFeature": true
+	},
+	"miniprogramRoot": "./dist/",
+	"compileType": "miniprogram",
+	"appid": "wx1f3650068c2eab69",
+	"projectname": "smart-home",
+	"condition": {
+		"search": {
+			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
+		"game": {
+			"currentL": -1,
+			"list": []
+		},
+		"miniprogram": {
+			"current": -1,
+			"list": [
+				{
+					"id": -1,
+					"name": "我的页面",
+					"pathName": "pages/my/main",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "个人资料页面",
+					"pathName": "pages/my/person/main",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "语音控制页面",
+					"pathName": "pages/my/voice/main",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "智能页面调试",
+					"pathName": "pages/scene/main",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "有品页面调试",
+					"pathName": "pages/shop/main",
+					"query": ""
+				}
+			]
+		}
+	}
+}
