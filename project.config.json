@@ -8,6 +8,9 @@
 		"newFeature": true
 	},
 	"miniprogramRoot": "./dist/",
+	"client": "./dist",
+  	"svr": "./server/",
+  	"qcloudRoot": "./server/",
 	"compileType": "miniprogram",
 	"appid": "wx1f3650068c2eab69",
 	"projectname": "life-timeline",
