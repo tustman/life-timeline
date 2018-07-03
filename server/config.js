@@ -1,6 +1,6 @@
 const CONF = {
     port: '5757',
-    rootPathname: '',
+    rootPathname: '/server/',
 
     // 微信小程序 App ID
     appId: 'wx1f3650068c2eab69',
