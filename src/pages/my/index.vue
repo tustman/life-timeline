@@ -13,8 +13,8 @@
         </view>
 
         <view class="weui-cell__bd">
-          <picker @change="bindSexPickerChange" :value="index" :range="array">
-            <view class="weui-input">{{array[selectSex]}}</view>
+          <picker @change="bindSexPickerChange" :value="userInfo.gender" :range="array">
+            <view class="weui-input">{{array[userInfo.gender]}}</view>
           </picker>
         </view>
       </view>
@@ -24,8 +24,8 @@
           <view class="weui-label">生日</view>
         </view>
         <view class="weui-cell__bd">
-          <picker mode="date" @change="bindBirthDateChange" :value="birthDate" start="2015-09-01" end="2017-09-01">
-            <view class="weui-input">{{birthDate}}</view>
+          <picker mode="date" @change="bindBirthDateChange" :value="userInfo.birthDate" start="2015-09-01" end="2017-09-01">
+            <view class="weui-input">{{userInfo.birthDate}}</view>
           </picker>
         </view>
       </view>
@@ -35,8 +35,8 @@
           <view class="weui-label">家乡</view>
         </view>
         <view class="weui-cell__bd">
-          <picker @change="bindHomePickerChange" :value="selectProvince" :range="province">
-            <view class="weui-input">{{province[selectHomeProvince]}}</view>
+          <picker @change="bindHomePickerChange" :value="userInfo.native_address" :range="provinceList">
+            <view class="weui-input">{{provinceList[userInfo.native_address]}}</view>
           </picker>
         </view>
       </view>
@@ -46,8 +46,8 @@
           <view class="weui-label">所在地</view>
         </view>
         <view class="weui-cell__bd">
-          <picker @change="bindAddressPickerChange" :value="selectProvince" :range="province">
-            <view class="weui-input">{{province[selectAddressProvince]}}</view>
+          <picker @change="bindAddressPickerChange" :value="userInfo.live_address" :range="provinceList">
+            <view class="weui-input">{{provinceList[userInfo.live_address]}}</view>
           </picker>
         </view>
       </view>
@@ -72,7 +72,7 @@
         </view>
       </view>
     </i-panel>
-
+   <button open-type="getUserInfo" lang="zh_CN" @getuserinfo="onGotUserInfo">使用微信个人信息</button>
     <i-message id="message" />
     <i-toast id="toast" />
 
@@ -81,20 +81,53 @@
 
 <script>
 import card from '@/components/card'
-const {$Message} = require('../../../static/iview/base/index')
+const { $Message } = require('../../../static/iview/base/index')
 export default {
   data () {
     return {
       array: ['男', '女'],
-      selectSex: 0,
-      birthDate: '2018-07-01',
-      province: ['北京', '天津', '河北', '山西', '内蒙古', '辽宁', '吉林', '黑龙江', '上海', '江苏', '浙江省', '安徽', '福建', '江西', '山东', '河南', '湖北', '湖南', '广东', '广西', '海南', '重庆', '四川', '贵州', '云南', '西藏', '陕西', '甘肃省', '青海', '宁夏', '新疆', '台湾', '香港特别行政区', '澳门'],
-      selectHomeProvince: 0,
-      selectAddressProvince: 0,
-      buttonType: 'error',
-      buttonValue: '关机',
-      userInfo: {},
-      currentInfo: 'homepage'
+      provinceList: [
+        '北京',
+        '天津',
+        '河北',
+        '山西',
+        '内蒙古',
+        '辽宁',
+        '吉林',
+        '黑龙江',
+        '上海',
+        '江苏',
+        '浙江省',
+        '安徽',
+        '福建',
+        '江西',
+        '山东',
+        '河南',
+        '湖北',
+        '湖南',
+        '广东',
+        '广西',
+        '海南',
+        '重庆',
+        '四川',
+        '贵州',
+        '云南',
+        '西藏',
+        '陕西',
+        '甘肃省',
+        '青海',
+        '宁夏',
+        '新疆',
+        '台湾',
+        '香港特别行政区',
+        '澳门'
+      ],
+      userInfo: {
+        gender: 0,
+        birthDate: '2018-07-01',
+        native_address: 0,
+        live_address: 0
+      }
     }
   },
 
@@ -103,17 +136,25 @@ export default {
   },
 
   methods: {
+    onGotUserInfo (data) {
+      if (data.mp.detail.userInfo) {
+        let wxUserInfo = data.mp.detail.userInfo
+        this.userInfo.gender = wxUserInfo.gender - 1
+        this.userInfo.live_address = this.provinceList.indexOf(wxUserInfo.province)
+        this.userInfo.native_address = this.provinceList.indexOf(wxUserInfo.province)
+      }
+    },
     bindSexPickerChange (data) {
-      this.selectSex = data.mp.detail.value
+      this.userInfo.gender = data.mp.detail.value
     },
     bindHomePickerChange (data) {
-      this.selectHomeProvince = data.mp.detail.value
+      this.userInfo.native_address = data.mp.detail.value
     },
     bindAddressPickerChange (data) {
-      this.selectAddressProvince = data.mp.detail.value
+      this.userInfo.live_address = data.mp.detail.value
     },
     bindBirthDateChange (data) {
-      this.birthDate = data.mp.detail.value
+      this.userInfo.birthDate = data.mp.detail.value
     },
     handlerAvatarClick () {
       wx.navigateTo({
@@ -129,31 +170,29 @@ export default {
       this.currentInfo = data.mp.detail.key
     },
     handleClick () {
-      if (this.buttonType === 'success') {
-        $Message({content: '电视已开机', type: 'success'})
-        this.buttonValue = '关机'
-        this.buttonType = 'error'
-      } else if (this.buttonType === 'error') {
-        $Message({content: '电视已关机', type: 'success'})
-        this.buttonValue = '开机'
-        this.buttonType = 'success'
+      let data = {
+        sex: this.gender,
+        birthDate: this.birthDate,
+        native_address: this.native_address,
+        live_address: this.live_address
       }
+      console.log('========>', data)
+      wx.request({
+        url: 'https://qcs9kals.qcloud.la/weapp/get', // 仅为示例，并非真实的接口地址
+        data: {userId: 1},
+        header: {
+          'content-type': 'application/json' // 默认值
+        },
+        method: 'POST',
+        success: function (res) {
+          console.log(res.data)
+          $Message({ content: res.data.data.user.home_province, type: 'success' })
+        }
+      })
     },
     bindViewTap () {
       const url = '../logs/main'
       wx.navigateTo({ url })
-    },
-    getUserInfo () {
-      // 调用登录接口
-      wx.login({
-        success: () => {
-          wx.getUserInfo({
-            success: (res) => {
-              this.userInfo = res.userInfo
-            }
-          })
-        }
-      })
     },
     clickHandle (msg, ev) {
       console.log('clickHandle:', msg, ev)
@@ -161,74 +200,72 @@ export default {
   },
 
   created () {
-    // 调用应用实例的方法获取全局数据
-    this.getUserInfo()
   }
 }
 </script>
 
 <style scoped>
-  @import "../../../static/css/weui.wxss";
-  .head-panel{
-    background-color: #3c3c3c;
-    text-align: center;
-    padding-top: 20px;
-    padding-bottom: 20px;
-  }
+@import "../../../static/css/weui.wxss";
+.head-panel {
+  background-color: #3c3c3c;
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
 
-  .nickname {
-    margin-top: 10px;
-    font-size: 16px;
-    color: #F2F2F2;
-  }
+.nickname {
+  margin-top: 10px;
+  font-size: 16px;
+  color: #f2f2f2;
+}
 
-  .intro {
-    margin-top: 10px;
-    font-size: 12px;
-    color: #F2F2F2;
-  }
-  .cell-panel-demo{
-    display: block;
-    margin-top: 10px;
-  }
-  .my-avatar{
-    height: 100px;
-    width: 100px;
-  }
-  .my-container {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: #F2F2F2;
-  }
+.intro {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #f2f2f2;
+}
+.cell-panel-demo {
+  display: block;
+  margin-top: 10px;
+}
+.my-avatar {
+  height: 100px;
+  width: 100px;
+}
+.my-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #f2f2f2;
+}
 
-  .my-title-info {
-    margin-left: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
+.my-title-info {
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
-  .my-title-info-more {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-left: 150px;
-    color: #7F7F7F;
-  }
+.my-title-info-more {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 150px;
+  color: #7f7f7f;
+}
 
-  .address {
-    font-size: 12px;
-  }
+.address {
+  font-size: 12px;
+}
 
-  .weather_info_text {
-    font-size: 12px;
-    color: #7F7F7F;
-  }
-  .grid-image{
-    transform: scale(0.8);
-  }
-  .grid-text{
-    font-size: 12px;
-  }
+.weather_info_text {
+  font-size: 12px;
+  color: #7f7f7f;
+}
+.grid-image {
+  transform: scale(0.8);
+}
+.grid-text {
+  font-size: 12px;
+}
 </style>
