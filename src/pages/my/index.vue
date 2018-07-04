@@ -73,6 +73,7 @@
       </view>
     </i-panel>
    <button open-type="getUserInfo" lang="zh_CN" @getuserinfo="onGotUserInfo">使用微信个人信息</button>
+   <button @tap="handleClick">保存个人信息</button>
     <i-message id="message" />
     <i-toast id="toast" />
 
@@ -81,7 +82,8 @@
 
 <script>
 import card from '@/components/card'
-const { $Message } = require('../../../static/iview/base/index')
+import utils from '@/utils'
+// const { $Message } = require('../../../static/iview/base/index')
 export default {
   data () {
     return {
@@ -123,10 +125,16 @@ export default {
         '澳门'
       ],
       userInfo: {
+        nick_name: '',
+        avatar_url: '',
         gender: 0,
         birthDate: '2018-07-01',
         native_address: 0,
-        live_address: 0
+        live_address: 0,
+        language: '',
+        city: '',
+        country: '',
+        province: ''
       }
     }
   },
@@ -139,6 +147,15 @@ export default {
     onGotUserInfo (data) {
       if (data.mp.detail.userInfo) {
         let wxUserInfo = data.mp.detail.userInfo
+        console.log(wxUserInfo)
+        this.userInfo.nick_name = wxUserInfo.nickName
+        this.userInfo.avatar_url = wxUserInfo.avatarUrl
+
+        this.userInfo.language = wxUserInfo.language
+        this.userInfo.city = wxUserInfo.city
+        this.userInfo.country = wxUserInfo.country
+        this.userInfo.province = wxUserInfo.province
+
         this.userInfo.gender = wxUserInfo.gender - 1
         this.userInfo.live_address = this.provinceList.indexOf(wxUserInfo.province)
         this.userInfo.native_address = this.provinceList.indexOf(wxUserInfo.province)
@@ -170,25 +187,25 @@ export default {
       this.currentInfo = data.mp.detail.key
     },
     handleClick () {
-      let data = {
-        sex: this.gender,
-        birthDate: this.birthDate,
-        native_address: this.native_address,
-        live_address: this.live_address
-      }
-      console.log('========>', data)
-      wx.request({
-        url: 'https://qcs9kals.qcloud.la/weapp/get', // 仅为示例，并非真实的接口地址
-        data: {userId: 1},
-        header: {
-          'content-type': 'application/json' // 默认值
-        },
-        method: 'POST',
-        success: function (res) {
-          console.log(res.data)
-          $Message({ content: res.data.data.user.home_province, type: 'success' })
-        }
-      })
+      let userInfoDate = utils.deepClone(this.userInfo)
+      console.log('========>', userInfoDate)
+      userInfoDate.gender++
+      userInfoDate.native_address = this.provinceList[userInfoDate.native_address]
+      userInfoDate.live_address = this.provinceList[userInfoDate.live_address]
+      console.log('========>', JSON.stringify(userInfoDate))
+
+      // wx.request({
+      //   url: 'https://qcs9kals.qcloud.la/weapp/save', // 仅为示例，并非真实的接口地址
+      //   data: {userId: 1},
+      //   header: {
+      //     'content-type': 'application/json' // 默认值
+      //   },
+      //   method: 'POST',
+      //   success: function (res) {
+      //     console.log(res.data)
+      //     $Message({ content: res.data.data.user.home_province, type: 'success' })
+      //   }
+      // })
     },
     bindViewTap () {
       const url = '../logs/main'
