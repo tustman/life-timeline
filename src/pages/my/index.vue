@@ -83,6 +83,7 @@
 <script>
 import card from '@/components/card'
 import utils from '@/utils'
+import config from '@/config'
 // const { $Message } = require('../../../static/iview/base/index')
 export default {
   data () {
@@ -213,10 +214,38 @@ export default {
     },
     clickHandle (msg, ev) {
       console.log('clickHandle:', msg, ev)
+    },
+    initUserInfo () {
+      console.log('2018年7月6日01:24:28===========================> 1')
+      wx.login({
+        success: function (res) {
+          if (res.code) {
+            // 发起网络请求
+            console.log('2018年7月6日01:24:28===========================> 2')
+            console.log('2018年7月6日01:24:28===========================> 3', res.code)
+            wx.request({
+              url: config.baseUrl + '/weapp/getOpenId',
+              data: {
+                code: res.code
+              },
+              method: 'post',
+              success: function (response) {
+                console.log('success 2018年7月6日01:26:08------>4', response)
+              },
+              fail: function (response) {
+                console.log('fail 2018年7月6日01:26:08------>5', response)
+              }
+            })
+          } else {
+            console.log('登录失败！' + res.errMsg)
+          }
+        }
+      })
     }
   },
 
   created () {
+    this.initUserInfo()
   }
 }
 </script>
