@@ -1,28 +1,7 @@
-# 概述
-  本项目是参照米家App布局和配色, 基于[mpvue](http://mpvue.com/), [iview](https://weapp.iviewui.com/), [zanui](https://www.youzanyun.com/zanui)编写的一个小程序代码,项目只编写了几个有代表性的页面,用于交流学习.
+# 项目立项
+	2018年6月30日22:36:53 北京华龙苑南里小区
+# 小程序背景
+	每个人的一生都是独一无二的 , 人生的不同阶段都有一些标志性事件, 例如中考,高考等 ; 正是这些一个一个的标志性事件让我们走到了今天,回首过去有太多需要感慨和记录的故事和接点值得被纪念,  
 
-# 效果
-  ![](https://github.com/tustman/smart-home/blob/master/screenshot/000.gif)
-
-
-# smart-home
-
-> smart-home
-
-## Build Setup
-
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-```
-
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+# 小程序命名
+	我的人生时间线 
