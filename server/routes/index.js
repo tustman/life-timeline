@@ -34,6 +34,8 @@ router.post('/message', controllers.message.post)
 // POST 用来处理微信转发过来的客服消息
 router.post('/save', controllers.userInfo.save)
 router.post('/get', controllers.userInfo.get)
-router.post('/getOpenId', controllers.userInfo.getOpenId)
+router.post('/login', controllers.userInfo.login)
+router.post('/getUserInfo', controllers.userInfo.getUserInfo)
+router.post('/updateUserInfo', controllers.userInfo.updateUserInfo)
 
 module.exports = router

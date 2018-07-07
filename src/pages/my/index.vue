@@ -1,102 +1,104 @@
 <template>
   <div class="my-container">
-    <view class="head-panel">
+    <div v-if="userInfoAuth">
+      <view class="head-panel">
 
-      <div v-if="login">
-        <i-avatar class="my-avatar" :src="userInfo.avatar_url" size="large"></i-avatar>
-        <div class="nickname">{{userInfo.nick_name}}</div>
-      </div>
-      <div v-else @click="handleLogin">
-        <i-avatar class="my-avatar" src="../../../static/image/boy.png" size="large"></i-avatar>
-        <div class="nickname">登录/注册</div>
-      </div>
+        <div v-if="login">
+          <i-avatar class="my-avatar" :src="userInfo.avatar_url" size="large"></i-avatar>
+          <div class="nickname">{{userInfo.nick_name}}</div>
+        </div>
+        <div v-else @click="handleLogin">
+          <i-avatar class="my-avatar" src="../../../static/image/boy.png" size="large"></i-avatar>
+          <div class="nickname">登录/注册</div>
+        </div>
 
-    </view>
-
-    <i-panel class="cell-panel-demo">
-      <view class="weui-cell weui-cell_input">
-        <view class="weui-cell__hd">
-          <view class="weui-label">性别</view>
-        </view>
-
-        <view class="weui-cell__bd">
-          <picker @change="bindSexPickerChange" :value="userInfo.gender" :range="array">
-            <view class="weui-input">{{array[userInfo.gender]}}</view>
-          </picker>
-        </view>
       </view>
 
-      <view class="weui-cell weui-cell_input">
-        <view class="weui-cell__hd">
-          <view class="weui-label">生日</view>
-        </view>
-        <view class="weui-cell__bd">
-          <picker mode="date" @change="bindBirthDateChange" :value="userInfo.birthDate" start="1970-01-01" :end="nowDate">
-            <view class="weui-input">{{userInfo.birthDate}}</view>
-          </picker>
-        </view>
-      </view>
+      <i-panel class="cell-panel-demo">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">性别</view>
+          </view>
 
-      <view class="weui-cell weui-cell_input">
-        <view class="weui-cell__hd">
-          <view class="weui-label">家乡</view>
+          <view class="weui-cell__bd">
+            <picker @change="bindSexPickerChange" :value="userInfo.gender" :range="array">
+              <view class="weui-input">{{array[userInfo.gender-1]}}</view>
+            </picker>
+          </view>
         </view>
-        <view class="weui-cell__bd">
-          <picker @change="bindHomePickerChange" :value="userInfo.native_address" :range="provinceList">
-            <view class="weui-input">{{provinceList[userInfo.native_address]}}</view>
-          </picker>
-        </view>
-      </view>
 
-      <view class="weui-cell weui-cell_input">
-        <view class="weui-cell__hd">
-          <view class="weui-label">所在地</view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">生日</view>
+          </view>
+          <view class="weui-cell__bd">
+            <picker mode="date" @change="bindBirthDateChange" :value="userInfo.birthdate" start="1970-01-01" :end="nowDate">
+              <view class="weui-input">{{userInfo.birthdate}}</view>
+            </picker>
+          </view>
         </view>
-        <view class="weui-cell__bd">
-          <picker @change="bindAddressPickerChange" :value="userInfo.live_address" :range="provinceList">
-            <view class="weui-input">{{provinceList[userInfo.live_address]}}</view>
-          </picker>
-        </view>
-      </view>
-    </i-panel>
 
-    <i-panel class="cell-panel-demo">
-      <view class="weui-cell weui-cell_input">
-        <view class="weui-cell__hd">
-          <view class="weui-label">当前版本</view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">家乡</view>
+          </view>
+          <view class="weui-cell__bd">
+            <picker @change="bindHomePickerChange" :value="userInfo.native_address" :range="provinceList">
+              <view class="weui-input">{{provinceList[userInfo.native_address]}}</view>
+            </picker>
+          </view>
         </view>
-        <view class="weui-cell__bd">
-          <view class="weui-input">1.2.3</view>
+
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">所在地</view>
+          </view>
+          <view class="weui-cell__bd">
+            <picker @change="bindAddressPickerChange" :value="userInfo.live_address" :range="provinceList">
+              <view class="weui-input">{{provinceList[userInfo.live_address]}}</view>
+            </picker>
+          </view>
         </view>
-      </view>
+      </i-panel>
 
-      <view class="weui-cell weui-cell_input">
-        <view class="weui-cell__hd">
-          <view class="weui-label">关于我们</view>
+      <i-panel class="cell-panel-demo">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">当前版本</view>
+          </view>
+          <view class="weui-cell__bd">
+            <view class="weui-input">1.2.3</view>
+          </view>
         </view>
-        <view class="weui-cell__bd">
-          <view class="weui-input"></view>
+
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">关于我们</view>
+          </view>
+          <view class="weui-cell__bd">
+            <view class="weui-input"></view>
+          </view>
         </view>
-      </view>
-    </i-panel>
+      </i-panel>
 
-    <button v-if="login" style="background-color: #3c3c3c;color: #f2f2f2;" @click="handleLogout">退出登录</button>
-
-    <i-message id="message" />
-    <i-toast id="toast" />
-
+      <button v-if="login" style="background-color: #3c3c3c;color: #f2f2f2;" @click="handleLogout">退出登录</button>
+    </div>
+    <div v-else>
+      <button open-type="getUserInfo" lang="zh_CN" @getuserinfo="handleGetUserInfo">授权登录</button>
+    </div>
   </div>
 </template>
 
 <script>
 import card from '@/components/card'
 import utils from '@/utils'
-import config from '@/config'
+import http from '../../utils/http'
 const dayjs = require('dayjs')
 // const { $Message } = require('../../../static/iview/base/index')
 export default {
   data () {
     return {
+      userInfoAuth: false,
       array: ['男', '女'],
       login: false,
       provinceList: [
@@ -138,8 +140,8 @@ export default {
       userInfo: {
         nick_name: '',
         avatar_url: '',
-        gender: 0,
-        birthDate: '1994-12-15',
+        gender: 1,
+        birthdate: '2000-01-01',
         native_address: -1,
         live_address: -1,
         language: '',
@@ -162,8 +164,15 @@ export default {
     handleGetUserInfo (data) {
       if (data.mp.detail.userInfo) {
         let wxUserInfo = data.mp.detail.userInfo
+        this.userInfoAuth = true
+        // 1. 根据用户信息回显个人信息
         this.handleUserInfoShow(wxUserInfo)
+        // 2. 登录获取skey,并保存在本地,将个人信息保存在数据库
+        this.handleLogin(this.userInfo)
       }
+    },
+    saveUserInfo2DB () {
+      http.request('/weapp/getOpenId')
     },
     handleUserInfoShow (wxUserInfo) {
       this.userInfo.nick_name = wxUserInfo.nickName
@@ -174,7 +183,7 @@ export default {
       this.userInfo.country = wxUserInfo.country
       this.userInfo.province = wxUserInfo.province
 
-      this.userInfo.gender = wxUserInfo.gender - 1
+      this.userInfo.gender = wxUserInfo.gender
       this.userInfo.live_address = this.provinceList.indexOf(wxUserInfo.province)
       this.userInfo.native_address = this.provinceList.indexOf(wxUserInfo.province)
     },
@@ -188,7 +197,7 @@ export default {
       this.userInfo.live_address = data.mp.detail.value
     },
     bindBirthDateChange (data) {
-      this.userInfo.birthDate = data.mp.detail.value
+      this.userInfo.birthdate = data.mp.detail.value
     },
     handleChange (data) {
       this.currentInfo = data.mp.detail.key
@@ -201,6 +210,7 @@ export default {
     },
     handleLogout () {
       this.login = false
+      this.userInfo = {}
       wx.removeStorage({key: 'skey'})
     },
     bindViewTap () {
@@ -210,39 +220,33 @@ export default {
     clickHandle (msg, ev) {
       console.log('clickHandle:', msg, ev)
     },
-    handleLogin () {
+    handleLogin (userInfo) {
+      wx.showLoading({
+        title: '登录中'
+      })
       let that = this
       wx.login({
         success: function (res) {
           if (res.code) {
-            // 发起网络请求
-            console.log('2018年7月6日01:24:28===========================> 3', res.code)
-            wx.request({
-              url: config.baseUrl + '/weapp/getOpenId',
-              data: {
-                code: res.code
-              },
-              method: 'post',
-              success: function (response) {
-                console.log('success 2018年7月6日01:26:08------>4', response)
-                wx.setStorageSync('skey', response.data.data.skey)
-                wx.getUserInfo({
-                  success: (res) => {
-                    console.log('2018年7月7日17:44:30##########>', res)
-                    that.handleUserInfoShow(res.userInfo)
-                  }
-                })
-                that.login = true
-              },
-              fail: function (response) {
-                console.log('fail 2018年7月6日01:26:08------>5', response)
-              }
+            // 1. 登录成功, 获取skey, 并存入本地
+            http.request('/weapp/login', {
+              code: res.code,
+              userInfo: userInfo
+            }).then(response => {
+              wx.setStorageSync('skey', response.data.data.skey)
+              wx.hideLoading()
+              that.login = true
+            }).catch(err => {
+              console.log(err)
+              wx.hideLoading()
             })
           } else {
             console.log('登录失败！' + res.errMsg)
           }
         }
       })
+    },
+    handleGetUserInfoFromDb () {
     },
     checkLogin () {
       let that = this
@@ -257,8 +261,7 @@ export default {
           // session_key 过期
           fail: function () {
             // session_key过期，重新登录
-            // doLogin()
-            that.login = false
+            that.handleLogin()
           }
         })
       } else {
@@ -269,6 +272,14 @@ export default {
     }
   },
   created () {
+    let that = this
+    wx.getSetting({
+      success: (res) => {
+        if (res.authSetting && res.authSetting['scope.userInfo']) {
+          that.userInfoAuth = true
+        }
+      }
+    })
   }
 }
 </script>
