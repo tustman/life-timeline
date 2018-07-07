@@ -1,9 +1,16 @@
 <template>
   <div class="my-container">
-    <view @click="handlerAvatarClick" class="head-panel">
-      <i-avatar class="my-avatar" src="../../../static/image/avatar.jpg" size="large"></i-avatar>
-      <div class="nickname">王一宁</div>
-      <div class="intro">简介: 软件开发,爱看书,爱思考</div>
+    <view class="head-panel">
+
+      <div v-if="login">
+        <i-avatar class="my-avatar" :src="userInfo.avatar_url" size="large"></i-avatar>
+        <div class="nickname">{{userInfo.nick_name}}</div>
+      </div>
+      <div v-else @click="handleLogin">
+        <i-avatar class="my-avatar" src="../../../static/image/boy.png" size="large"></i-avatar>
+        <div class="nickname">登录/注册</div>
+      </div>
+
     </view>
 
     <i-panel class="cell-panel-demo">
@@ -24,7 +31,7 @@
           <view class="weui-label">生日</view>
         </view>
         <view class="weui-cell__bd">
-          <picker mode="date" @change="bindBirthDateChange" :value="userInfo.birthDate" start="2015-09-01" end="2017-09-01">
+          <picker mode="date" @change="bindBirthDateChange" :value="userInfo.birthDate" start="1970-01-01" :end="nowDate">
             <view class="weui-input">{{userInfo.birthDate}}</view>
           </picker>
         </view>
@@ -72,8 +79,9 @@
         </view>
       </view>
     </i-panel>
-   <button open-type="getUserInfo" lang="zh_CN" @getuserinfo="onGotUserInfo">使用微信个人信息</button>
-   <button @tap="handleClick">保存个人信息</button>
+
+    <button v-if="login" style="background-color: #3c3c3c;color: #f2f2f2;" @click="handleLogout">退出登录</button>
+
     <i-message id="message" />
     <i-toast id="toast" />
 
@@ -84,11 +92,13 @@
 import card from '@/components/card'
 import utils from '@/utils'
 import config from '@/config'
+const dayjs = require('dayjs')
 // const { $Message } = require('../../../static/iview/base/index')
 export default {
   data () {
     return {
       array: ['男', '女'],
+      login: false,
       provinceList: [
         '北京',
         '天津',
@@ -129,9 +139,9 @@ export default {
         nick_name: '',
         avatar_url: '',
         gender: 0,
-        birthDate: '2018-07-01',
-        native_address: 0,
-        live_address: 0,
+        birthDate: '1994-12-15',
+        native_address: -1,
+        live_address: -1,
         language: '',
         city: '',
         country: '',
@@ -139,28 +149,34 @@ export default {
       }
     }
   },
-
+  computed: {
+    nowDate () {
+      return dayjs().format('YYYY-MM-DD')
+    }
+  },
   components: {
     card
   },
 
   methods: {
-    onGotUserInfo (data) {
+    handleGetUserInfo (data) {
       if (data.mp.detail.userInfo) {
         let wxUserInfo = data.mp.detail.userInfo
-        console.log(wxUserInfo)
-        this.userInfo.nick_name = wxUserInfo.nickName
-        this.userInfo.avatar_url = wxUserInfo.avatarUrl
-
-        this.userInfo.language = wxUserInfo.language
-        this.userInfo.city = wxUserInfo.city
-        this.userInfo.country = wxUserInfo.country
-        this.userInfo.province = wxUserInfo.province
-
-        this.userInfo.gender = wxUserInfo.gender - 1
-        this.userInfo.live_address = this.provinceList.indexOf(wxUserInfo.province)
-        this.userInfo.native_address = this.provinceList.indexOf(wxUserInfo.province)
+        this.handleUserInfoShow(wxUserInfo)
       }
+    },
+    handleUserInfoShow (wxUserInfo) {
+      this.userInfo.nick_name = wxUserInfo.nickName
+      this.userInfo.avatar_url = wxUserInfo.avatarUrl
+
+      this.userInfo.language = wxUserInfo.language
+      this.userInfo.city = wxUserInfo.city
+      this.userInfo.country = wxUserInfo.country
+      this.userInfo.province = wxUserInfo.province
+
+      this.userInfo.gender = wxUserInfo.gender - 1
+      this.userInfo.live_address = this.provinceList.indexOf(wxUserInfo.province)
+      this.userInfo.native_address = this.provinceList.indexOf(wxUserInfo.province)
     },
     bindSexPickerChange (data) {
       this.userInfo.gender = data.mp.detail.value
@@ -174,39 +190,18 @@ export default {
     bindBirthDateChange (data) {
       this.userInfo.birthDate = data.mp.detail.value
     },
-    handlerAvatarClick () {
-      wx.navigateTo({
-        url: '/pages/my/person/main'
-      })
-    },
-    handleVoice () {
-      wx.navigateTo({
-        url: '/pages/my/voice/main'
-      })
-    },
     handleChange (data) {
       this.currentInfo = data.mp.detail.key
     },
     handleClick () {
       let userInfoDate = utils.deepClone(this.userInfo)
-      console.log('========>', userInfoDate)
       userInfoDate.gender++
       userInfoDate.native_address = this.provinceList[userInfoDate.native_address]
       userInfoDate.live_address = this.provinceList[userInfoDate.live_address]
-      console.log('========>', JSON.stringify(userInfoDate))
-
-      // wx.request({
-      //   url: 'https://qcs9kals.qcloud.la/weapp/save', // 仅为示例，并非真实的接口地址
-      //   data: {userId: 1},
-      //   header: {
-      //     'content-type': 'application/json' // 默认值
-      //   },
-      //   method: 'POST',
-      //   success: function (res) {
-      //     console.log(res.data)
-      //     $Message({ content: res.data.data.user.home_province, type: 'success' })
-      //   }
-      // })
+    },
+    handleLogout () {
+      this.login = false
+      wx.removeStorage({key: 'skey'})
     },
     bindViewTap () {
       const url = '../logs/main'
@@ -215,13 +210,12 @@ export default {
     clickHandle (msg, ev) {
       console.log('clickHandle:', msg, ev)
     },
-    initUserInfo () {
-      console.log('2018年7月6日01:24:28===========================> 1')
+    handleLogin () {
+      let that = this
       wx.login({
         success: function (res) {
           if (res.code) {
             // 发起网络请求
-            console.log('2018年7月6日01:24:28===========================> 2')
             console.log('2018年7月6日01:24:28===========================> 3', res.code)
             wx.request({
               url: config.baseUrl + '/weapp/getOpenId',
@@ -231,6 +225,14 @@ export default {
               method: 'post',
               success: function (response) {
                 console.log('success 2018年7月6日01:26:08------>4', response)
+                wx.setStorageSync('skey', response.data.data.skey)
+                wx.getUserInfo({
+                  success: (res) => {
+                    console.log('2018年7月7日17:44:30##########>', res)
+                    that.handleUserInfoShow(res.userInfo)
+                  }
+                })
+                that.login = true
               },
               fail: function (response) {
                 console.log('fail 2018年7月6日01:26:08------>5', response)
@@ -241,11 +243,32 @@ export default {
           }
         }
       })
+    },
+    checkLogin () {
+      let that = this
+      let loginFlag = wx.getStorageSync('skey')
+      if (loginFlag) {
+        wx.checkSession({
+          // session_key 有效(未过期)
+          success: function () {
+            // 业务逻辑处理
+            that.login = true
+          },
+          // session_key 过期
+          fail: function () {
+            // session_key过期，重新登录
+            // doLogin()
+            that.login = false
+          }
+        })
+      } else {
+        // 无skey，作为首次登录
+        // doLogin()
+        that.login = false
+      }
     }
   },
-
   created () {
-    this.initUserInfo()
   }
 }
 </script>
