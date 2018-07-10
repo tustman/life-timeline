@@ -168,7 +168,7 @@ export default {
         // 1. 根据用户信息回显个人信息
         this.handleUserInfoShow(wxUserInfo)
         // 2. 登录获取skey,并保存在本地,将个人信息保存在数据库
-        this.handleLogin()
+        this.checkLogin()
       }
     },
     saveUserInfo2DB () {
@@ -279,8 +279,6 @@ export default {
           }
         }
       })
-    },
-    handleGetUserInfoFromDb () {
     },
     checkLogin () {
       wx.showLoading({
