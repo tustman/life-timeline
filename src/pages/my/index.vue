@@ -168,7 +168,7 @@ export default {
         // 1. 根据用户信息回显个人信息
         this.handleUserInfoShow(wxUserInfo)
         // 2. 登录获取skey,并保存在本地,将个人信息保存在数据库
-        this.handleLogin(this.userInfo)
+        this.handleLogin()
       }
     },
     saveUserInfo2DB () {
@@ -211,6 +211,7 @@ export default {
     handleLogout () {
       this.login = false
       this.userInfo = {}
+      this.userInfoAuth = false
       wx.removeStorage({key: 'skey'})
     },
     bindViewTap () {
@@ -220,7 +221,7 @@ export default {
     clickHandle (msg, ev) {
       console.log('clickHandle:', msg, ev)
     },
-    handleLogin (userInfo) {
+    handleLogin () {
       wx.showLoading({
         title: '登录中'
       })
@@ -228,12 +229,19 @@ export default {
       wx.login({
         success: function (res) {
           if (res.code) {
+            let loginData = {code: res.code}
+            if (that.userInfo.avatar_url) {
+              loginData.userInfo = JSON.stringify(that.userInfo)
+            }
             // 1. 登录成功, 获取skey, 并存入本地
-            http.request('/weapp/login', {
-              code: res.code,
-              userInfo: userInfo
-            }).then(response => {
+            http.request('/weapp/login', loginData).then(response => {
               wx.setStorageSync('skey', response.data.data.skey)
+              if (response.data.data.user) {
+                let userInfoData = response.data.data.user
+                userInfoData = utils.removeEmptyProperty(userInfoData)
+                Object.assign(that.userInfo, userInfoData)
+                that.userInfo = response.data.data.user
+              }
               wx.hideLoading()
               that.login = true
             }).catch(err => {
@@ -249,6 +257,9 @@ export default {
     handleGetUserInfoFromDb () {
     },
     checkLogin () {
+      wx.showLoading({
+        title: '登录中'
+      })
       let that = this
       let loginFlag = wx.getStorageSync('skey')
       if (loginFlag) {
@@ -256,7 +267,17 @@ export default {
           // session_key 有效(未过期)
           success: function () {
             // 业务逻辑处理
-            that.login = true
+            // 根据skey获取用户信息保存到本地
+            http.request('/weapp/getUserInfo', {skey: loginFlag}).then(response => {
+              that.login = true
+              let userInfoData = response.data.data.userInfo
+              userInfoData = utils.removeEmptyProperty(userInfoData)
+              Object.assign(that.userInfo, userInfoData)
+              wx.hideLoading()
+            }).catch(err => {
+              console.log(err)
+              wx.hideLoading()
+            })
           },
           // session_key 过期
           fail: function () {
@@ -267,12 +288,13 @@ export default {
       } else {
         // 无skey，作为首次登录
         // doLogin()
-        that.login = false
+        that.handleLogin()
       }
     }
   },
   created () {
     let that = this
+    this.checkLogin()
     wx.getSetting({
       success: (res) => {
         if (res.authSetting && res.authSetting['scope.userInfo']) {
