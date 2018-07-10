@@ -51,7 +51,7 @@ export function removeEmptyProperty (obj) {
   if (!obj) return
   for (var property in obj) {
     var value = obj[property]
-    if (!value) {
+    if (!value && value !== 0) {
       delete obj[property]
     } else if (value instanceof Array && value.length === 0) {
       delete obj[property]

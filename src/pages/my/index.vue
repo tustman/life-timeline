@@ -22,7 +22,7 @@
 
           <view class="weui-cell__bd">
             <picker @change="bindSexPickerChange" :value="userInfo.gender" :range="array">
-              <view class="weui-input">{{array[userInfo.gender-1]}}</view>
+              <view class="weui-input">{{array[userInfo.gender]}}</view>
             </picker>
           </view>
         </view>
@@ -99,7 +99,7 @@ export default {
   data () {
     return {
       userInfoAuth: false,
-      array: ['男', '女'],
+      array: ['未知', '男', '女'],
       login: false,
       provinceList: [
         '北京',
@@ -140,7 +140,7 @@ export default {
       userInfo: {
         nick_name: '',
         avatar_url: '',
-        gender: 1,
+        gender: 0,
         birthdate: '2000-01-01',
         native_address: -1,
         live_address: -1,
@@ -189,24 +189,46 @@ export default {
     },
     bindSexPickerChange (data) {
       this.userInfo.gender = data.mp.detail.value
+      let postData = {gender: this.userInfo.gender}
+      let sessionKey = wx.getStorageSync('skey')
+      http.request('/weapp/updateUserInfo', {skey: sessionKey, userInfo: JSON.stringify(postData)}).then(response => {
+        console.log(response)
+      }).catch(err => {
+        console.log(err)
+      })
     },
     bindHomePickerChange (data) {
       this.userInfo.native_address = data.mp.detail.value
+      let postData = {native_address: this.userInfo.native_address}
+      let sessionKey = wx.getStorageSync('skey')
+      http.request('/weapp/updateUserInfo', {skey: sessionKey, userInfo: JSON.stringify(postData)}).then(response => {
+        console.log(response)
+      }).catch(err => {
+        console.log(err)
+      })
     },
     bindAddressPickerChange (data) {
       this.userInfo.live_address = data.mp.detail.value
+      let postData = {live_address: this.userInfo.live_address}
+      let sessionKey = wx.getStorageSync('skey')
+      http.request('/weapp/updateUserInfo', {skey: sessionKey, userInfo: JSON.stringify(postData)}).then(response => {
+        console.log(response)
+      }).catch(err => {
+        console.log(err)
+      })
     },
     bindBirthDateChange (data) {
       this.userInfo.birthdate = data.mp.detail.value
+      let postData = {birthdate: this.userInfo.birthdate}
+      let sessionKey = wx.getStorageSync('skey')
+      http.request('/weapp/updateUserInfo', {skey: sessionKey, userInfo: JSON.stringify(postData)}).then(response => {
+        console.log(response)
+      }).catch(err => {
+        console.log(err)
+      })
     },
     handleChange (data) {
       this.currentInfo = data.mp.detail.key
-    },
-    handleClick () {
-      let userInfoDate = utils.deepClone(this.userInfo)
-      userInfoDate.gender++
-      userInfoDate.native_address = this.provinceList[userInfoDate.native_address]
-      userInfoDate.live_address = this.provinceList[userInfoDate.live_address]
     },
     handleLogout () {
       this.login = false
@@ -237,9 +259,13 @@ export default {
             http.request('/weapp/login', loginData).then(response => {
               wx.setStorageSync('skey', response.data.data.skey)
               if (response.data.data.user) {
-                let userInfoData = response.data.data.user
-                userInfoData = utils.removeEmptyProperty(userInfoData)
-                Object.assign(that.userInfo, userInfoData)
+                let postData = response.data.data.user
+                if (postData.birthdate) {
+                  let realBirthdate = dayjs(postData.birthdate).format('YYYY-MM-DD')
+                  postData.birthdate = realBirthdate
+                }
+                postData = utils.removeEmptyProperty(postData)
+                Object.assign(that.userInfo, postData)
                 that.userInfo = response.data.data.user
               }
               wx.hideLoading()
@@ -261,18 +287,22 @@ export default {
         title: '登录中'
       })
       let that = this
-      let loginFlag = wx.getStorageSync('skey')
-      if (loginFlag) {
+      let sessionKey = wx.getStorageSync('skey')
+      if (sessionKey) {
         wx.checkSession({
           // session_key 有效(未过期)
           success: function () {
             // 业务逻辑处理
             // 根据skey获取用户信息保存到本地
-            http.request('/weapp/getUserInfo', {skey: loginFlag}).then(response => {
+            http.request('/weapp/getUserInfo', {skey: sessionKey}).then(response => {
               that.login = true
-              let userInfoData = response.data.data.userInfo
-              userInfoData = utils.removeEmptyProperty(userInfoData)
-              Object.assign(that.userInfo, userInfoData)
+              let postData = response.data.data.userInfo
+              if (postData.birthdate) {
+                let realBirthdate = dayjs(postData.birthdate).format('YYYY-MM-DD')
+                postData.birthdate = realBirthdate
+              }
+              postData = utils.removeEmptyProperty(postData)
+              Object.assign(that.userInfo, postData)
               wx.hideLoading()
             }).catch(err => {
               console.log(err)
